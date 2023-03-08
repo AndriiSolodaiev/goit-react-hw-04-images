@@ -16,34 +16,66 @@ export const ImageGallery = ({ searchRequestApp }) => {
   const [loading, setLoading] = useState(false);
   const [disableButton, setDisableButton] = useState(false);
 
+  // useEffect(() => {
+  //   if (searchRequestApp) {
+  //     setLoading(true);
+  //     setPage(1);
+  //     setImages([]);
+  //     setDisableButton(false);
+
+  //     fetchImages(searchRequestApp, 1)
+  //       .then(({ hits, totalHits }) => {
+  //         if (hits.length) {
+  //           toast.info(`We found ${totalHits} results`);
+  //           setImages([...hits]);
+  //         } else {
+  //           toast.error('Sorry, there are no results');
+  //         }
+  //       })
+  //       .catch(err => alert(err.message))
+  //       .finally(() => setLoading(false));
+  //   }
+  // }, [searchRequestApp]);
+
+  // useEffect(() => {
+  //   if (page !== 1) {
+  //     setLoading(true);
+  //     fetchImages(searchRequestApp, page)
+  //       .then(({ hits }) => {
+  //         if (hits.length) {
+  //           setImages(i => [...i, ...hits]);
+  //         } else {
+  //           setDisableButton(true);
+  //           toast.error('Sorry, there are no results');
+  //         }
+  //       })
+  //       .catch(err => alert(err.message))
+  //       .finally(() => setLoading(false));
+  //   }
+  // }, [page]);
   useEffect(() => {
     if (searchRequestApp) {
-      setLoading(true);
       setPage(1);
       setImages([]);
-      setDisableButton(false);
-
-      fetchImages(searchRequestApp, 1)
-        .then(({ hits, totalHits }) => {
-          if (hits.length) {
-            toast.info(`We found ${totalHits} results`);
-            setImages([...hits]);
-          } else {
-            toast.error('Sorry, there are no results');
-          }
-        })
-        .catch(err => alert(err.message))
-        .finally(() => setLoading(false));
+      console.log('Clear state');
     }
   }, [searchRequestApp]);
-
   useEffect(() => {
-    if (page !== 1) {
+    if (searchRequestApp) {
+      console.log(page);
       setLoading(true);
       fetchImages(searchRequestApp, page)
-        .then(({ hits }) => {
+        .then(({ hits, totalHits }) => {
           if (hits.length) {
-            setImages([...images, ...hits]);
+            if (page === 1) {
+              toast.info(`We found ${totalHits} results`);
+              setImages([...hits]);
+              console.log('1 Виконання');
+            } else {
+              setImages(i => [...i, ...hits]);
+
+              console.log('2 Виконання');
+            }
           } else {
             setDisableButton(true);
             toast.error('Sorry, there are no results');
@@ -52,7 +84,7 @@ export const ImageGallery = ({ searchRequestApp }) => {
         .catch(err => alert(err.message))
         .finally(() => setLoading(false));
     }
-  }, [page]);
+  }, [searchRequestApp, page]);
 
   const handleClickMore = () => {
     setPage(prevState => prevState + 1);

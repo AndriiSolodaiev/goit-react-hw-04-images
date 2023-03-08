@@ -13,7 +13,6 @@ export const Modal = ({ onClose, children }) => {
 
   const handleKeyDown = e => {
     if (e.code === 'Escape') {
-      console.log('Esc');
       onClose();
     }
   };

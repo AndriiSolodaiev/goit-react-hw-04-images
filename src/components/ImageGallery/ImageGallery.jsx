@@ -9,6 +9,8 @@ import { fetchImages } from 'api';
 import PropTypes from 'prop-types';
 
 export const ImageGallery = ({ searchRequestApp }) => {
+  const [searchRequest, setSearchRequest] = useState('');
+
   const [images, setImages] = useState([]);
   const [activImage, setActivImage] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -16,55 +18,19 @@ export const ImageGallery = ({ searchRequestApp }) => {
   const [loading, setLoading] = useState(false);
   const [disableButton, setDisableButton] = useState(false);
 
-  // useEffect(() => {
-  //   if (searchRequestApp) {
-  //     setLoading(true);
-  //     setPage(1);
-  //     setImages([]);
-  //     setDisableButton(false);
-
-  //     fetchImages(searchRequestApp, 1)
-  //       .then(({ hits, totalHits }) => {
-  //         if (hits.length) {
-  //           toast.info(`We found ${totalHits} results`);
-  //           setImages([...hits]);
-  //         } else {
-  //           toast.error('Sorry, there are no results');
-  //         }
-  //       })
-  //       .catch(err => alert(err.message))
-  //       .finally(() => setLoading(false));
-  //   }
-  // }, [searchRequestApp]);
-
-  // useEffect(() => {
-  //   if (page !== 1) {
-  //     setLoading(true);
-  //     fetchImages(searchRequestApp, page)
-  //       .then(({ hits }) => {
-  //         if (hits.length) {
-  //           setImages(i => [...i, ...hits]);
-  //         } else {
-  //           setDisableButton(true);
-  //           toast.error('Sorry, there are no results');
-  //         }
-  //       })
-  //       .catch(err => alert(err.message))
-  //       .finally(() => setLoading(false));
-  //   }
-  // }, [page]);
   useEffect(() => {
     if (searchRequestApp) {
+      setSearchRequest(searchRequestApp);
       setPage(1);
       setImages([]);
-      console.log('Clear state');
     }
   }, [searchRequestApp]);
+
   useEffect(() => {
-    if (searchRequestApp) {
+    if (searchRequest) {
       console.log(page);
       setLoading(true);
-      fetchImages(searchRequestApp, page)
+      fetchImages(searchRequest, page)
         .then(({ hits, totalHits }) => {
           if (hits.length) {
             if (page === 1) {
@@ -84,7 +50,7 @@ export const ImageGallery = ({ searchRequestApp }) => {
         .catch(err => alert(err.message))
         .finally(() => setLoading(false));
     }
-  }, [searchRequestApp, page]);
+  }, [searchRequest, page]);
 
   const handleClickMore = () => {
     setPage(prevState => prevState + 1);
